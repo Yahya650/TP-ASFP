@@ -13,6 +13,7 @@ const FormatuerLogin = () => {
     return (
         <div className='d-flex justify-content-center w-100 mt-5'>
             <form onSubmit={handleSubmit}>
+            <h1>Login Formateur</h1>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>
                     <input type="email" className="form-control" required id="email" pattern='[^\s@]+@[^\s@]+\.[^\s@]+' />

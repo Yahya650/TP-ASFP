@@ -1,10 +1,8 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
-import NavBar from './components/NavBar';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import TableFormation from './components/formateur/TableFormation';
-import TableUtilisateur from './components/TableUtilisateur';
 import ShowFormation from './components/formateur/ShowFormation';
 import IndexParticipant from './layouts/participant/IndexParticipant';
 import IndexFormatuer from './layouts/formateur/IndexFormatuer';
@@ -15,7 +13,7 @@ import TableFormationGuest from './components/guest/TableFormationGuest';
 import { useContextApi } from './context/ContextApi';
 import TableUtilisateurGuest from './components/guest/TableUtilisateurGuest';
 import EditFormation from './components/formateur/EditFormation';
-import AddFormation from './components/formateur/AddFormation';
+import TableFormationParticip from './components/participant/TableFormationParticip';
 
 
 function App() {
@@ -32,13 +30,12 @@ function App() {
           <Route path='table-formation' element={<TableFormation />} />
           <Route path='show-formation/:id' element={<ShowFormation />} />
           <Route path='edit-formation/:id' element={<EditFormation />} />
-          <Route path='add-formation' element={<AddFormation />} />
 
         </Route>
 
         <Route path={'/participant'} element={<IndexParticipant />}>
           <Route index element={<h1 className='text-center mt-5'>Welcome {user?.nom}</h1>} />
-          <Route path='table-formation' element={<TableFormationGuest />} />
+          <Route path='table-formation' element={<TableFormationParticip />} />
         </Route>
 
         <Route path={'/'} element={<IndexGuest />}>

@@ -24,6 +24,7 @@ const Context = createContext({
     updateFormation: () => { },
     searchByDomaine: () => { },
     searchByNiveau: () => { },
+    inscriFormation: () => { }
 
 });
 
@@ -133,14 +134,26 @@ const ContextApi = ({ children }) => {
 
     const addFormation = (formation) => {
         setFormations([...formations, formation]);
-        user.formations_enseignees.push(formation.id);
-        localStorage.setItem('user', JSON.stringify(user)); 
-        console.log(formations);
+        setUser({ ...user, formations_enseignees: [...user.formations_enseignees, formation.id] });
+        localStorage.setItem('user', JSON.stringify(user));
     }
 
     const updateFormation = (id, formationParam) => {
-        setFormations(formations.filter(formation => formation.id === id ? formationParam : formation));
-        navigate('/formateur/table-formation');
+        setFormations(prevFormations => 
+            prevFormations.map(formation => 
+                formation.id === id ? { ...formation, ...formationParam } : formation
+            )
+        );
+    }
+    
+
+
+
+    const inscriFormation = (id) => {
+        if (!user.formations_inscrites.includes(id)) {
+            setUser({ ...user, formations_inscrites: [...user.formations_inscrites, id] });
+            localStorage.setItem('user', JSON.stringify(user));
+        }
     }
 
     const deleteFormation = (id) => {
@@ -181,7 +194,8 @@ const ContextApi = ({ children }) => {
             addFormation: addFormation,
             updateFormation: updateFormation,
             searchByDomaine: searchByDomaine,
-            searchByNiveau: searchByNiveau
+            searchByNiveau: searchByNiveau,
+            inscriFormation: inscriFormation
         }}>
             {!loading ? children : <>
                 <div className="d-flex justify-content-center">

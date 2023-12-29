@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { axiosClient } from '../../api/axiosClient'
 import { useContextApi } from '../../context/ContextApi';
 import { Link } from 'react-router-dom';
 import { Select } from '@chakra-ui/react'
 
 const TableFormation = () => {
 
-    const { fetchFormations, formations, user, deleteFormation, addFormation, searchByDomaine, searchByNiveau } = useContextApi();
+    const { fetchFormations, formations, user, deleteFormation, addFormation, searchByDomaine, searchByNiveau, updateFormation } = useContextApi();
 
     const [searchByValue, setSearchByValue] = useState(null);
 
 
     useEffect(() => {
-        fetchFormations()
+        fetchFormations()   
     }, [])
 
     return (
@@ -96,28 +95,88 @@ const TableFormation = () => {
                     <tbody>
                         {
                             formations.filter((formation) => user.formations_enseignees.includes(formation.id)).map((formation) => (
-                                <tr key={formation.id}>
-                                    <td>{formation.id}</td>
-                                    <td>{formation.titre}</td>
-                                    <td>{formation.domaine}</td>
-                                    <td>{formation.niveau}</td>
-                                    <td>{formation.description}</td>
-                                    <td>{formation.disponible === "true" || formation.disponible === true ? <div><span className="badge bg-success">Disponible</span></div> : <div><span className="badge bg-danger">Indisponible</span></div>}</td>
-                                    <td>
-                                        <div className='d-flex column-gap-1'>
-                                            <Link to={"/formateur/show-formation/" + formation.id}>
-                                                <button className="btn btn-primary">Show</button>
-                                            </Link>
-                                            <button className="btn btn-danger" onClick={() => deleteFormation(formation.id)}>Delete</button>
-                                            <Link className="btn btn-success" to={"/formateur/edit-formation/" + formation.id}>Edit</Link>
+                                <>
+                                    <tr key={formation.id}>
+                                        <td>{formation.id}</td>
+                                        <td>{formation.titre}</td>
+                                        <td>{formation.domaine}</td>
+                                        <td>{formation.niveau}</td>
+                                        <td>{formation.description}</td>
+                                        <td>{formation.disponible === "true" || formation.disponible === true ? <div><span className="badge bg-success">Disponible</span></div> : <div><span className="badge bg-danger">Indisponible</span></div>}</td>
+                                        <td>
+                                            <div className='d-flex column-gap-1'>
+                                                <Link to={"/formateur/show-formation/" + formation.id}>
+                                                    <button className="btn btn-primary">Show</button>
+                                                </Link>
+                                                <button className="btn btn-danger" onClick={() => deleteFormation(formation.id)}>Delete</button>
+                                                <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target={"#exampleModal" + formation.id}>
+                                                    Edit
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <div key={1} className="modal fade" id={"exampleModal" + formation.id} tabIndex="-1" aria-labelledby={"exampleModalLabel" + formation.id} aria-hidden="true">
+                                        <div className="modal-dialog">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
+                                                    <h1 className="modal-title fs-5" id={"exampleModalLabel" + formation.id}>Modal title</h1>
+                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div className="modal-body">
+                                                    <form className='container' onSubmit={e => { e.preventDefault(); updateFormation(formation.id, { titre: e.target.titre.value, descreption: e.target.description.value, niveau: e.target.niveau.value, domaine: e.target.domaine.value, disponible: e.target.disponible.value == 0 ? false : true }) }}>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="titre" className="form-label">titre</label>
+                                                            <input type="text" name="titre" defaultValue={formation?.titre} className="form-control" id="titre" aria-describedby="emailHelp" />
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="description" className="form-label">description</label>
+                                                            <textarea name="description" defaultValue={formation?.description} className="form-control" required id="description" cols="50" rows="2"></textarea>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="domaine" className="form-label">domaine</label>
+                                                            <select name="domaine" defaultValue={formation?.domaine} id="domaine" className="form-select">
+                                                                <option value="Management">Management</option>
+                                                                <option value="Informatique">Informatique</option>
+                                                                <option value="Design">Design</option>
+                                                                <option value="Commerce">Commerce</option>
+                                                                <option value="Autre">Autre</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="niveau" className="form-label">niveau</label>
+                                                            <select name="niveau" defaultValue={formation?.niveau} id="niveau" className="form-select">
+                                                                <option value="Débutant">Débutant</option>
+                                                                <option value="Intermediaire">Intermediaire</option>
+                                                                <option value="Avance">Avance</option>
+                                                                <option value="Expert">Expert</option>
+                                                                <option value="Master">Master</option>
+                                                                <option value="PhD">PhD</option>
+                                                                <option value="Doctorat">Doctorat</option>
+                                                                <option value="Autre">Autre</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="mb-3">
+                                                            <label htmlFor="disponible" className="form-label">Disponible</label>
+                                                            <select defaultValue={formation?.disponible} name="disponible" id="disponible" className="form-select" aria-label="Default select example">
+                                                                <option value="1">True</option>
+                                                                <option value="0">False</option>
+                                                            </select>
+                                                        </div>
+                                                        <button type="submit" className="btn btn-primary">Submit</button>
+                                                    </form>
+                                                </div>
+                                                <div className="modal-footer">
+                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </>
                             ))
                         }
                     </tbody>
                 </table>}
-            </div>
+            </div >
 
 
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -128,14 +187,14 @@ const TableFormation = () => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <form onSubmit={e => { e.preventDefault(); addFormation({ id: Math.floor(Math.random() * 1000), titre: e.target.titre.value, domaine: e.target.domaine.value, description: e.target.description.value, niveau: e.target.niveau.value, disponible: e.target.disponible.value }); }}>
+                            <form onSubmit={e => { e.preventDefault(); addFormation({ id: Math.floor(Math.random() * 1000) + 1, titre: e.target.titre.value, domaine: e.target.domaine.value, description: e.target.description.value, niveau: e.target.niveau.value, disponible: e.target.disponible.value }); }}>
                                 <div className="mb-3">
                                     <label htmlFor="titre" className="form-label">titre</label>
                                     <input type="text" required name="titre" className="form-control" id="titre" />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">description</label>
-                                    <textarea name="description" required id="description" cols="30" rows="10"></textarea>
+                                    <textarea name="description" className="form-control" required id="description" cols="50" rows="2"></textarea>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="niveau" className="form-label">niveau</label>
@@ -176,6 +235,7 @@ const TableFormation = () => {
                     </div>
                 </div>
             </div>
+
         </>
     )
 }

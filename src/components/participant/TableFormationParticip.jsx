@@ -3,7 +3,7 @@ import { axiosClient } from '../../api/axiosClient'
 import { useContextApi } from '../../context/ContextApi';
 import { Select } from '@chakra-ui/react';
 
-const TableFormationGuest = () => {
+const TableFormationParticip = () => {
 
     const { fetchFormations, formations, searchByDomaine, searchByNiveau, user, inscriFormation } = useContextApi();
     const [searchByValue, setSearchByValue] = useState(null);
@@ -46,6 +46,7 @@ const TableFormationGuest = () => {
                             <th scope="col">Niveau</th>
                             <th scope="col">Descreption</th>
                             <th scope="col">Disponible</th>
+                            <th scope="col">Inscrit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,6 +59,10 @@ const TableFormationGuest = () => {
                                     <td>{formation.niveau}</td>
                                     <td>{formation.description}</td>
                                     <td>{formation.disponible ? <div><span className="badge bg-success">Disponible</span></div> : <div><span className="badge bg-danger">Indisponible</span></div>}</td>
+
+                                    <td className='text-center'>{formation.disponible && !user.formations_inscrites.includes(formation.id) ? <div><button className="btn btn-primary" onClick={() => inscriFormation(formation.id)}>Inscrire</button></div>
+                                    : <div><button className="btn btn-primary disabled"><small>{user.formations_inscrites.includes(formation.id) ? "deja inscrit" : "No disponible"}</small></button></div>}</td>
+
                                 </tr>
                             ))
                         }
@@ -73,6 +78,7 @@ const TableFormationGuest = () => {
                             <th>Niveau</th>
                             <th>Descreption</th>
                             <th>Disponible</th>
+                            <th className='px-5'>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,7 +90,11 @@ const TableFormationGuest = () => {
                                     <td>{formation.domaine}</td>
                                     <td>{formation.niveau}</td>
                                     <td>{formation.description}</td>
+
                                     <td>{formation.disponible ? <div><span className="badge bg-success">Disponible</span></div> : <div><span className="badge bg-danger">Indisponible</span></div>}</td>
+                                    <td className='text-center'>{formation.disponible && !user.formations_inscrites.includes(formation.id) ? <div><button className="btn btn-primary" onClick={() => inscriFormation(formation.id)}>Inscrire</button></div>
+                                    : <div><button className="btn btn-primary disabled"><small>{user.formations_inscrites.includes(formation.id) ? "deja inscrit" : "No disponible"}</small></button></div>}</td>
+
                                 </tr>
                             ))
                         }
@@ -97,4 +107,4 @@ const TableFormationGuest = () => {
     )
 }
 
-export default TableFormationGuest
+export default TableFormationParticip

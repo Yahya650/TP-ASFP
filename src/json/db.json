@@ -35,7 +35,6 @@
             "email": "sgreerd@example.com",
             "password": "12345678",
             "formations_inscrites": [
-                101,
                 103
             ]
         },
