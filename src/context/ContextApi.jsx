@@ -24,7 +24,8 @@ const Context = createContext({
     updateFormation: () => { },
     searchByDomaine: () => { },
     searchByNiveau: () => { },
-    inscriFormation: () => { }
+    inscriFormation: () => { },
+    register: () => { },
 
 });
 
@@ -132,6 +133,22 @@ const ContextApi = ({ children }) => {
         }
     }
 
+    async function register(guard, dataPar) {
+        // console.log(dataPar);
+        try {
+            if (guard === 'formateur') {
+                const { data } = await axiosClient.post('/utilisateurs', dataPar);
+                login('formateur', data.email, data.password);
+            } else if (guard === 'participant') {
+                const { data } = await axiosClient.post('/utilisateurs', dataPar);
+                login('participant', data.email, data.password);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     const addFormation = (formation) => {
         setFormations([...formations, formation]);
         setUser({ ...user, formations_enseignees: [...user.formations_enseignees, formation.id] });
@@ -139,13 +156,13 @@ const ContextApi = ({ children }) => {
     }
 
     const updateFormation = (id, formationParam) => {
-        setFormations(prevFormations => 
-            prevFormations.map(formation => 
+        setFormations(prevFormations =>
+            prevFormations.map(formation =>
                 formation.id === id ? { ...formation, ...formationParam } : formation
             )
         );
     }
-    
+
 
 
 
@@ -195,7 +212,8 @@ const ContextApi = ({ children }) => {
             updateFormation: updateFormation,
             searchByDomaine: searchByDomaine,
             searchByNiveau: searchByNiveau,
-            inscriFormation: inscriFormation
+            inscriFormation: inscriFormation,
+            register: register,
         }}>
             {!loading ? children : <>
                 <div className="d-flex justify-content-center">

@@ -8,7 +8,7 @@ const Index = () => {
         if (localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).role === 'Participant') {
             navigate('/participant');
         } else if (localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).role === 'Formateur') {
-            navigate('/formatuer');
+            navigate('/formateur');
         }
     }, [])
     return (

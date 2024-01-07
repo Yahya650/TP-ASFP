@@ -14,6 +14,7 @@ import { useContextApi } from './context/ContextApi';
 import TableUtilisateurGuest from './components/guest/TableUtilisateurGuest';
 import EditFormation from './components/formateur/EditFormation';
 import TableFormationParticip from './components/participant/TableFormationParticip';
+import Register from './components/guest/Register';
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
 
         <Route path={'/'} element={<IndexGuest />}>
           <Route index element={<h1 className='text-center mt-5'>Welcome guest</h1>} />
+          <Route path='/register' element={<Register />} />
           <Route path='formateur/login' element={<FormatuerLogin />} />
           <Route path='participant/login' element={<ParticipantLogin />} />
           <Route path='table-formation' element={<TableFormationGuest />} />
